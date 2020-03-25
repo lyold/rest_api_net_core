@@ -106,6 +106,31 @@ namespace ApiRestFullCore.Controllers
             }
         }
 
+        [HttpGet("Pow/{firstNumber}/{secondNumber}")]
+        public IActionResult Pow(string firstNumber, string secondNumber)
+        {
+            try
+            {
+                if (isNumeric(firstNumber) && isNumeric(secondNumber))
+                {
+                    double first = Convert.ToDouble(firstNumber);
+                    double second = Convert.ToDouble(secondNumber);
+
+                    double pow = Math.Pow(first, second);
+
+                    return Ok(pow.ToString());
+                }
+                else
+                {
+                    return BadRequest("Invalid Operation.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format("Error Unknow: {0}", e.Message));
+            }
+        }
+
         private bool isNumeric(string number)
         {
             decimal convertedNumber;
