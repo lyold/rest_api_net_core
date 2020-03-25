@@ -1,27 +1,127 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRestFullCore.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class ValuesController : ControllerBase
+    public class CalculatorController : ControllerBase
     {
-        // GET api/values
-        [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        [HttpGet("Sum/{firstNumber}/{secondNumber}")]
+        public IActionResult Sum(string firstNumber, string secondNumber)
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                if(isNumeric(firstNumber) && isNumeric(secondNumber))
+                {
+                    decimal first = Convert.ToDecimal(firstNumber);
+                    decimal second = Convert.ToDecimal(secondNumber);
+
+                    decimal sum = first + second;
+
+                    return Ok(sum.ToString());
+                }
+                else
+                {
+                    return BadRequest("Invalid Operation.");
+                }
+            }
+            catch(Exception e)
+            {
+                return BadRequest(string.Format("Error Unknow: {0}", e.Message));
+            }
         }
 
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("Subtraction/{firstNumber}/{secondNumber}")]
+        public IActionResult Subtraction(string firstNumber, string secondNumber)
         {
-            return "value";
+            try
+            {
+                if (isNumeric(firstNumber) && isNumeric(secondNumber))
+                {
+                    decimal first = Convert.ToDecimal(firstNumber);
+                    decimal second = Convert.ToDecimal(secondNumber);
+
+                    decimal difference = first - second;
+
+                    return Ok(difference.ToString());
+                }
+                else
+                {
+                    return BadRequest("Invalid Operation.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format("Error Unknow: {0}", e.Message));
+            }
+        }
+
+        [HttpGet("Multiplication/{firstNumber}/{secondNumber}")]
+        public IActionResult Multiplication(string firstNumber, string secondNumber)
+        {
+            try
+            {
+                if (isNumeric(firstNumber) && isNumeric(secondNumber))
+                {
+                    decimal first = Convert.ToDecimal(firstNumber);
+                    decimal second = Convert.ToDecimal(secondNumber);
+
+                    decimal multiplication = first * second;
+
+                    return Ok(multiplication.ToString());
+                }
+                else
+                {
+                    return BadRequest("Invalid Operation.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format("Error Unknow: {0}", e.Message));
+            }
+        }
+
+        [HttpGet("Division/{firstNumber}/{secondNumber}")]
+        public IActionResult Division(string firstNumber, string secondNumber)
+        {
+            try
+            {
+                if (isNumeric(firstNumber) && isNumeric(secondNumber) && !invalidDenominator(secondNumber))
+                {
+                    decimal first = Convert.ToDecimal(firstNumber);
+                    decimal second = Convert.ToDecimal(secondNumber);
+
+                    decimal division = first / second;
+
+                    return Ok(division.ToString());
+                }
+                else
+                {
+                    return BadRequest("Invalid Operation.");
+                }
+            }
+            catch (Exception e)
+            {
+                return BadRequest(string.Format("Error Unknow: {0}", e.Message));
+            }
+        }
+
+        private bool isNumeric(string number)
+        {
+            decimal convertedNumber;
+
+            return decimal.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out convertedNumber);
+        }
+
+        private bool invalidDenominator(string number)
+        {
+            decimal convertedNumber;
+            decimal.TryParse(number, System.Globalization.NumberStyles.Any, System.Globalization.NumberFormatInfo.InvariantInfo, out convertedNumber);
+
+            if (convertedNumber == 0)
+                return true;
+
+            return false;
         }
 
         // POST api/values
